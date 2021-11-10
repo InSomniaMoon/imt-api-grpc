@@ -1,0 +1,19 @@
+syntax = "proto3";
+service User{
+    rpc CreateUser(UserBody) returns (UserBody) {};
+    rpc GetUserById(UserId) returns (UserBody) {};
+    rpc DeleteUser(UserId) returns (Empty) {};
+    rpc UpdateUser(UserBody) returns (UserBody) {};
+}
+
+message UserId{
+    string id=1;
+}
+
+message UserBody{
+    string id=1;
+    string name=2;
+    string last_active=3;
+}
+
+message Empty{}

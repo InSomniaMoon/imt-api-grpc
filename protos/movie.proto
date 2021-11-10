@@ -1,8 +1,11 @@
 syntax = "proto3";
 
 service Movie {
-  rpc GetMovieByID(MovieID) returns (MovieData) {}
-  rpc GetMovies(Empty) returns (stream MovieData) {}
+  rpc GetMovieByID(MovieID) returns (MovieData) {};
+  rpc GetListMovies (Empty) returns (stream MovieData) {};
+  rpc CreateMovie (MovieData) returns (Empty) {};
+  rpc UpdateMovie (MovieData) returns (Empty) {};
+  rpc DeleteMovie(MovieID) returns(Empty) {};
 }
 
 message MovieID {
@@ -17,6 +20,4 @@ message MovieData {
   string id = 4;
 }
 
-message Empty {
-  
-}
+message Empty{}
