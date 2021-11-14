@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\ntime.proto\"\x07\n\x05\x45mpty\"\x14\n\x04\x44\x61te\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\"/\n\x08ShowTime\x12\x13\n\x04\x64\x61te\x18\x01 \x01(\x0b\x32\x05.Date\x12\x0e\n\x06movies\x18\x02 \x03(\t2]\n\x0bTimeService\x12&\n\x0fGetAllShowTimes\x12\x06.Empty\x1a\t.ShowTime0\x01\x12&\n\x12GetShowTimesByDate\x12\x05.Date\x1a\t.ShowTimeb\x06proto3'
+  serialized_pb=b'\n\ntime.proto\"\x07\n\x05\x45mpty\"\x14\n\x04\x44\x61te\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\"/\n\x08ShowTime\x12\x13\n\x04\x64\x61te\x18\x01 \x01(\x0b\x32\x05.Date\x12\x0e\n\x06movies\x18\x02 \x03(\t2U\n\x04Time\x12&\n\x0fGetAllShowTimes\x12\x06.Empty\x1a\t.ShowTime0\x01\x12%\n\x11GetShowTimeByDate\x12\x05.Date\x1a\t.ShowTimeb\x06proto3'
 )
 
 
@@ -149,19 +149,19 @@ _sym_db.RegisterMessage(ShowTime)
 
 
 
-_TIMESERVICE = _descriptor.ServiceDescriptor(
-  name='TimeService',
-  full_name='TimeService',
+_TIME = _descriptor.ServiceDescriptor(
+  name='Time',
+  full_name='Time',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=94,
-  serialized_end=187,
+  serialized_end=179,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetAllShowTimes',
-    full_name='TimeService.GetAllShowTimes',
+    full_name='Time.GetAllShowTimes',
     index=0,
     containing_service=None,
     input_type=_EMPTY,
@@ -170,8 +170,8 @@ _TIMESERVICE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='GetShowTimesByDate',
-    full_name='TimeService.GetShowTimesByDate',
+    name='GetShowTimeByDate',
+    full_name='Time.GetShowTimeByDate',
     index=1,
     containing_service=None,
     input_type=_DATE,
@@ -180,8 +180,8 @@ _TIMESERVICE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
 ])
-_sym_db.RegisterServiceDescriptor(_TIMESERVICE)
+_sym_db.RegisterServiceDescriptor(_TIME)
 
-DESCRIPTOR.services_by_name['TimeService'] = _TIMESERVICE
+DESCRIPTOR.services_by_name['Time'] = _TIME
 
 # @@protoc_insertion_point(module_scope)

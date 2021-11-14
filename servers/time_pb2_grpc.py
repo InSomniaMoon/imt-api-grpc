@@ -5,7 +5,7 @@ import grpc
 import time_pb2 as time__pb2
 
 
-class TimeServiceStub(object):
+class TimeStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,18 +15,18 @@ class TimeServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GetAllShowTimes = channel.unary_stream(
-                '/TimeService/GetAllShowTimes',
+                '/Time/GetAllShowTimes',
                 request_serializer=time__pb2.Empty.SerializeToString,
                 response_deserializer=time__pb2.ShowTime.FromString,
                 )
-        self.GetShowTimesByDate = channel.unary_unary(
-                '/TimeService/GetShowTimesByDate',
+        self.GetShowTimeByDate = channel.unary_unary(
+                '/Time/GetShowTimeByDate',
                 request_serializer=time__pb2.Date.SerializeToString,
                 response_deserializer=time__pb2.ShowTime.FromString,
                 )
 
 
-class TimeServiceServicer(object):
+class TimeServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetAllShowTimes(self, request, context):
@@ -35,33 +35,33 @@ class TimeServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetShowTimesByDate(self, request, context):
+    def GetShowTimeByDate(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_TimeServiceServicer_to_server(servicer, server):
+def add_TimeServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetAllShowTimes': grpc.unary_stream_rpc_method_handler(
                     servicer.GetAllShowTimes,
                     request_deserializer=time__pb2.Empty.FromString,
                     response_serializer=time__pb2.ShowTime.SerializeToString,
             ),
-            'GetShowTimesByDate': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetShowTimesByDate,
+            'GetShowTimeByDate': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetShowTimeByDate,
                     request_deserializer=time__pb2.Date.FromString,
                     response_serializer=time__pb2.ShowTime.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'TimeService', rpc_method_handlers)
+            'Time', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class TimeService(object):
+class Time(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -75,14 +75,14 @@ class TimeService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/TimeService/GetAllShowTimes',
+        return grpc.experimental.unary_stream(request, target, '/Time/GetAllShowTimes',
             time__pb2.Empty.SerializeToString,
             time__pb2.ShowTime.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetShowTimesByDate(request,
+    def GetShowTimeByDate(request,
             target,
             options=(),
             channel_credentials=None,
@@ -92,7 +92,7 @@ class TimeService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/TimeService/GetShowTimesByDate',
+        return grpc.experimental.unary_unary(request, target, '/Time/GetShowTimeByDate',
             time__pb2.Date.SerializeToString,
             time__pb2.ShowTime.FromString,
             options, channel_credentials,
