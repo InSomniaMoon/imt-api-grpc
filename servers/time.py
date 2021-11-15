@@ -1,9 +1,6 @@
 import json
 import os
 from concurrent import futures
-from clients.time_pb2 import Date
-
-from settings import HOST, TIMEPORT
 
 import time_pb2
 import time_pb2_grpc
@@ -51,9 +48,9 @@ class ShowTimeServicer(time_pb2_grpc.TimeServicer):
 # lance le serveur gRPC
 def serve():
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-  print("serving on " + HOST + ':' + TIMEPORT)
+  print("serving on " + "localhost" + ':' + "3003")
   time_pb2_grpc.add_TimeServicer_to_server(ShowTimeServicer(), server)
-  server.add_insecure_port('[::]:' + TIMEPORT)
+  server.add_insecure_port('[::]:' + "3003")
   server.start()
   server.wait_for_termination()
 

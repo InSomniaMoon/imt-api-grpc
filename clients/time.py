@@ -1,5 +1,5 @@
 import grpc
-from settings import HOST, TIMEPORT
+
 import time_pb2_grpc
 import time_pb2
 import grpc
@@ -16,12 +16,12 @@ def get_st_by_date(stub: time_pb2_grpc.TimeStub, d: str):
 
 def run():
 
-  print("runing to host " + HOST + ':' + TIMEPORT)
-  with grpc.insecure_channel('localhost' + ':' + TIMEPORT) as channel:
+  print("runing to host " + "localhost" + ':' + "3003")
+  with grpc.insecure_channel('localhost' + ':' + "3003") as channel:
     stub = time_pb2_grpc.TimeStub(channel)
 
     print("-------------- GetAllShowTimes --------------")
-    get_all_show_times(stub)
+    #get_all_show_times(stub)
 
     print("-------------- GetShowtimesByDate --------------")
     get_st_by_date(stub, "20151201")

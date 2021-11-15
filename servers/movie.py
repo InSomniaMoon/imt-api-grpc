@@ -3,7 +3,7 @@ import grpc
 from concurrent import futures
 import movie_pb2
 import movie_pb2_grpc
-from settings import MOVIEPORT
+
 
 
 class MovieServicer(movie_pb2_grpc.MovieServicer):
@@ -53,12 +53,17 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
     for movie in self.db:
       if (str(movie["id"]) == str(id)):
         self.db.remove(movie)
+    return movie_pb2.Empty()
+   
 
+  def GetListMovies(self, request, context):
+        for movie in self.db : 
+            yield movie_pb2.MovieData(title=movie['title'], rating=movie['rating'],director=movie['director'], id=movie['id'])
 
 def serve():
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
   movie_pb2_grpc.add_MovieServicer_to_server(MovieServicer(), server)
-  server.add_insecure_port('[::]:' + MOVIEPORT)
+  server.add_insecure_port('[::]:3002')
   server.start()
   server.wait_for_termination()
 

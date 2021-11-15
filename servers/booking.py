@@ -1,9 +1,9 @@
 import concurrent
+from concurrent import futures
 import grpc
 import json
 import booking_pb2 
 import booking_pb2_grpc
-from settings import BOOKINGPORT
 
 class BookingServicer(booking_pb2_grpc.BookingServicer):
     def __init__(self):
@@ -15,12 +15,18 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             yield booking_pb2.BookingMessage(date=booking['dates'],userid=booking['userid'])
 
     def GetBookingByUserId(self, request, context):
+        return None
         for booking in self.db:
-            if booking["id"] == request.id:
+            if str(booking["userid"]) == str(request.id):
+                print("hello")
                 return booking_pb2.BookingMessage(
                     userid=booking["userid"],
-                    date=booking["dates"]
+                    date=[booking_pb2.Date(date=b.date,movies=b.movies) for b in booking]
                 )
+        return booking_pb2.BookingMessage(
+            userid="",
+            date=""
+        )
 
     def CreateBooking(self, request, context):
         self.db.append({
@@ -30,10 +36,10 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
     
 
 def serve():
-  server = grpc.server(concurrent.Future.ThreadPoolExecutor(max_workers=10))
+  server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
   booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(),
                                                       server)
-  server.add_insecure_port('[::]:' + BOOKINGPORT)
+  server.add_insecure_port('[::]:' + "3005")
   server.start()
   server.wait_for_termination()
 

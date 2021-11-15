@@ -3,7 +3,7 @@ import grpc
 import json
 import user_pb2 
 import user_pb2_grpc
-from settings import USERPORT
+
 
 
 class UserServicer(user_pb2_grpc.UserServicer):
@@ -12,22 +12,20 @@ class UserServicer(user_pb2_grpc.UserServicer):
             self.db = json.load(jsf)["users"]
 
     def GetAllUser(self,request,context):
-        print(self.db)
         for user in self.db:
             yield user_pb2.UserBody(
                 id=user["id"],
                 name=user["name"],
-                last_active=user["last_active"]
+                last_active=str(user["last_active"])
             )
 
     def GetUserById(self, request, context):
         for user in self.db:
-            print(request.id)
             if(str(user["id"]) == str(request.id)):
                 return user_pb2.UserBody(
                     id=user["id"],
                     name=user["name"],
-                    last_active=user["last_active"]
+                    last_active=str(user["last_active"])
                 )
         return user_pb2.UserBody(
             id="",
@@ -40,18 +38,19 @@ class UserServicer(user_pb2_grpc.UserServicer):
             "name":request.name,
             "last_active":request.last_active
         })
+        return user_pb2.Empty()
     
     def DeleteUser(self, request, context):
         id=request.id
         for user in self.db:
             if(str(user["id"] == str(id))):
                 self.db.remove(user)
-    
+        return user_pb2.Empty()
     
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     user_pb2_grpc.add_UserServicer_to_server(UserServicer(), server)
-    server.add_insecure_port('[::]:'+USERPORT)
+    server.add_insecure_port('[::]:3001')
     server.start()
     server.wait_for_termination()
 

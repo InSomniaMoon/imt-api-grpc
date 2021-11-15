@@ -1,10 +1,9 @@
 import grpc
 import movie_pb2
 import movie_pb2_grpc
-from settings import MOVIEPORT
 
 def run():
-    with grpc.insecure_channel('localhost:' + MOVIEPORT) as channel:
+    with grpc.insecure_channel('localhost:3002') as channel:
         stub = movie_pb2_grpc.MovieStub(channel)
         print("-------------- GetMovieByID --------------")
         movieid = movie_pb2.MovieID(id="a8034f44-aee4-44cf-b32c-74cf452aaaae")
@@ -27,7 +26,6 @@ def run():
 
 def get_list_movies(stub):
     movies = stub.GetListMovies(movie_pb2.Empty())
-    print(movies)
     for movie in movies : 
         print("Movie called : " + movie.title)
 
@@ -44,6 +42,7 @@ def get_movie_by_id(stub, id):
 
 def update_movie(stub, moviedata):
     stub.UpdateMovie(moviedata)
+
 
 if __name__ == "__main__":
     run()
