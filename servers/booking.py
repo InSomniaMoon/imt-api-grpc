@@ -15,7 +15,6 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             yield booking_pb2.BookingMessage(date=booking['dates'],userid=booking['userid'])
 
     def GetBookingByUserId(self, request, context):
-        return None
         for booking in self.db:
             if str(booking["userid"]) == str(request.id):
                 print("hello")
