@@ -1,36 +1,58 @@
 import json
+import os
 from concurrent import futures
+from clients.time_pb2 import Date
 
-import grpc
+from settings import HOST, TIMEPORT
+
 import time_pb2
 import time_pb2_grpc
-from settings import TIMEPORT
+import grpc
+
+os.environ['GRPC_VERBOSITY'] = "debug"
+os.environ[
+    'GRPC_TRACE'] = "call_error,connectivity_state,pick_first,round_robin,glb,http"
 
 
-class ShowTimeServicer(time_pb2_grpc.TimeServiceServicer):
+# populate showTime()
+# @param: st:showTime dict
+# @brief: méthode interne permettant de retourner un objet grpc showtime
+def populate_showTime(st):
+  print(st)
+  return time_pb2.ShowTime(date=time_pb2.Date(date=st["date"]),
+                           movies=list(st["movies"]))
+
+
+class ShowTimeServicer(time_pb2_grpc.TimeServicer):
   def __init__(self):
     with open('{}/databases/times.json'.format("."), "r") as jsf:
       self.db = json.load(jsf)["schedule"]
 
-  def populate_showTime(self, st):
-    return time_pb2.ShowTime(st["date"], st["movies"])
-
+  # get all show times
+  # @brief: retourne la liste des showTimes
   def GetAllShowTimes(self, request, context):
-    return map(self.populate_showTime, self.db)
+    print("GetAllShowTimes called")
+    # times = map(populate_showTime, self.db)
+    times = time_pb2.ShowTime(date="25112021",
+                              movies=list("edfklneekn", "zfkdfefk"))
+    print(times)
+    return times
 
-  def GetShowTimesByDate(self, request, context):
+  # get showTimes by date
+  # @param: data:string
+  # @brief: reoutrne les howtimes d'une date en particulier
+  def GetShowTimeByDate(self, request, context):
+    print("GetShowTimeByDate called")
     for line in self.db:
       if line["date"] == request.date:
-        return self.populate_showTime(line)
-
-  def passe():
-    pass
+        return populate_showTime(line)
 
 
+# lance le serveur gRPC
 def serve():
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-  time_pb2_grpc.add_TimeServiceServicer_to_server(ShowTimeServicer(),
-                                                      server)
+  print("serving on " + HOST + ':' + TIMEPORT)
+  time_pb2_grpc.add_TimeServicer_to_server(ShowTimeServicer(), server)
   server.add_insecure_port('[::]:' + TIMEPORT)
   server.start()
   server.wait_for_termination()
