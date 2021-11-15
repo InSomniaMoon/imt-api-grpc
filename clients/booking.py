@@ -1,27 +1,24 @@
 import grpc
-import json
-import booking_pb2 
+import booking_pb2
 import booking_pb2_grpc
 
-class BookingServicer(booking_pb2_grpc.BookingServicer):
-    def __init__(self):
-        with open('{}/databases/bookings.json'.format("."), "r") as jsf:
-            self.db = json.load(jsf)["bookings"]
+def run():
+    with grpc.insecure_channel('localhost:3001') as channel :
+        stub = booking_pb2_grpc.UserStub(channel)
 
-    def GetAllBookings(self,request,context):
-        for booking in self.db:
-            yield booking_pb2.BookingMessage(date=booking['dates'],userid=booking['userid'])
 
-    def GetBookingByUserId(self, request, context):
-        for booking in self.db:
-            if booking["id"] == request.id:
-                return booking_pb2.BookingMessage(
-                    userid=booking["userid"],
-                    date=booking["dates"]
-                )
+def get_booking(stub):
+    bookings = stub.GetAllBookings(booking_pb2.Empty())
+    for booking in bookings:
+        print(booking)
 
-    def CreateBooking(self, request, context):
-        self.db.append({
-            "userid":request.userid,
-            "date":request.date
-        })
+def get_booking_by_id(stub,id):
+    user = stub.GetBookingByUserId(stub,id)
+    print(user)
+    
+def create_booking(stub, booking):
+    stub.CreateBooking(booking)
+
+
+if __name__ == "__main__":
+    run()

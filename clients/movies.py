@@ -1,67 +1,49 @@
-import json
 import grpc
-from concurrent import futures
 import movie_pb2
 import movie_pb2_grpc
 from settings import MOVIEPORT
 
-
-class MovieServicer(movie_pb2_grpc.MovieServicer):
-  def __init__(self):
-    with open('{}/databases/movies.json'.format("."), "r") as jsf:
-      self.db = json.load(jsf)["movies"]
-
-  def GetMovieByID(self, request, context):
-    for movie in self.db:
-      if movie["id"] == request.id:
-        print(movie)
-        return movie_pb2.MovieData(title=movie['title'],
-                                   rating=movie['rating'],
-                                   director=movie['director'],
-                                   id=movie['id'])
-
-  def GetMovies(self, request, context):
-    for movie in self.db:
-      yield movie_pb2.MovieData(title=movie['title'],
-                                rating=movie['rating'],
-                                director=movie['director'],
-                                id=movie['id'])
-
-  def CreateMovie(self, request, context):
-    self.db.append({
-        "id": request.id,
-        "title": request.title,
-        "director": request.director,
-        "rating": request.rating
-    })
-    return movie_pb2.Empty()
-
-  def UpdateMovie(self, request, context):
-    id = request.id
-
-    for movie in self.db:
-      if (str(movie["id"]) == str(id)):
-        print(request.title)
-        movie["title"] = request.title
-        movie["director"] = request.director
-        movie["rating"] = request.rating
-
-    return movie_pb2.Empty()
-
-  def DeleteMovie(self, request, context):
-    id = request.id
-    for movie in self.db:
-      if (str(movie["id"]) == str(id)):
-        self.db.remove(movie)
+def run():
+    with grpc.insecure_channel('localhost:' + MOVIEPORT) as channel:
+        stub = movie_pb2_grpc.MovieStub(channel)
+        print("-------------- GetMovieByID --------------")
+        movieid = movie_pb2.MovieID(id="a8034f44-aee4-44cf-b32c-74cf452aaaae")
+        get_movie_by_id(stub, movieid)
+        print("-------------- GetListMovies --------------")
+        get_list_movies(stub)
 
 
-def serve():
-  server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-  movie_pb2_grpc.add_MovieServicer_to_server(MovieServicer(), server)
-  server.add_insecure_port('[::]:' + MOVIEPORT)
-  server.start()
-  server.wait_for_termination()
+        mvdata = movie_pb2.MovieData(title="test",rating=4.0,director="me",id="4")
+        create_movie(stub, mvdata)
+        get_list_movies(stub)
+        mvu = movie_pb2.MovieData(title="update",rating=0,director="me",id="a8034f44-aee4-44cf-b32c-74cf452aaaae")
+        update_movie(stub, mvu)
+        print("-------------- GetListMovies --------------")
+        get_list_movies(stub)
+        delete_movie(stub,movieid)
+        print("-------------- GetListMovies --------------")
+        get_list_movies(stub)
 
 
-if __name__ == '__main__':
-  serve()
+def get_list_movies(stub):
+    movies = stub.GetListMovies(movie_pb2.Empty())
+    print(movies)
+    for movie in movies : 
+        print("Movie called : " + movie.title)
+
+def delete_movie(stub,id):
+    stub.DeleteMovie(id)
+
+def create_movie(stub, movie):
+    stub.CreateMovie(movie)
+
+
+def get_movie_by_id(stub, id):
+    movie = stub.GetMovieByID(id)
+    print(movie)
+
+def update_movie(stub, moviedata):
+    stub.UpdateMovie(moviedata)
+
+if __name__ == "__main__":
+    run()

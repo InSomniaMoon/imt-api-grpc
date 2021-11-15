@@ -4,6 +4,7 @@ service User{
     rpc GetUserById(UserId) returns (UserBody) {};
     rpc DeleteUser(UserId) returns (Empty) {};
     rpc UpdateUser(UserBody) returns (UserBody) {};
+    rpc GetAllUser(Empty) returns (stream UserBody) {};
 }
 
 message UserId{

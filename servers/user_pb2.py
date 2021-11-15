@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\nuser.proto\"\x14\n\x06UserId\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x08UserBody\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0blast_active\x18\x03 \x01(\t\"\x07\n\x05\x45mpty2\x98\x01\n\x04User\x12$\n\nCreateUser\x12\t.UserBody\x1a\t.UserBody\"\x00\x12#\n\x0bGetUserById\x12\x07.UserId\x1a\t.UserBody\"\x00\x12\x1f\n\nDeleteUser\x12\x07.UserId\x1a\x06.Empty\"\x00\x12$\n\nUpdateUser\x12\t.UserBody\x1a\t.UserBody\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\nuser.proto\"\x14\n\x06UserId\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x08UserBody\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0blast_active\x18\x03 \x01(\t\"\x07\n\x05\x45mpty2\xbd\x01\n\x04User\x12$\n\nCreateUser\x12\t.UserBody\x1a\t.UserBody\"\x00\x12#\n\x0bGetUserById\x12\x07.UserId\x1a\t.UserBody\"\x00\x12\x1f\n\nDeleteUser\x12\x07.UserId\x1a\x06.Empty\"\x00\x12$\n\nUpdateUser\x12\t.UserBody\x1a\t.UserBody\"\x00\x12#\n\nGetAllUser\x12\x06.Empty\x1a\t.UserBody\"\x00\x30\x01\x62\x06proto3'
 )
 
 
@@ -163,7 +163,7 @@ _USER = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=105,
-  serialized_end=257,
+  serialized_end=294,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateUser',
@@ -201,6 +201,16 @@ _USER = _descriptor.ServiceDescriptor(
     index=3,
     containing_service=None,
     input_type=_USERBODY,
+    output_type=_USERBODY,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetAllUser',
+    full_name='User.GetAllUser',
+    index=4,
+    containing_service=None,
+    input_type=_EMPTY,
     output_type=_USERBODY,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,

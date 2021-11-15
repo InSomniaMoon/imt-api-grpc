@@ -34,6 +34,11 @@ class UserStub(object):
                 request_serializer=user__pb2.UserBody.SerializeToString,
                 response_deserializer=user__pb2.UserBody.FromString,
                 )
+        self.GetAllUser = channel.unary_stream(
+                '/User/GetAllUser',
+                request_serializer=user__pb2.Empty.SerializeToString,
+                response_deserializer=user__pb2.UserBody.FromString,
+                )
 
 
 class UserServicer(object):
@@ -63,6 +68,12 @@ class UserServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAllUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -84,6 +95,11 @@ def add_UserServicer_to_server(servicer, server):
             'UpdateUser': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateUser,
                     request_deserializer=user__pb2.UserBody.FromString,
+                    response_serializer=user__pb2.UserBody.SerializeToString,
+            ),
+            'GetAllUser': grpc.unary_stream_rpc_method_handler(
+                    servicer.GetAllUser,
+                    request_deserializer=user__pb2.Empty.FromString,
                     response_serializer=user__pb2.UserBody.SerializeToString,
             ),
     }
@@ -160,6 +176,23 @@ class User(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/User/UpdateUser',
             user__pb2.UserBody.SerializeToString,
+            user__pb2.UserBody.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/User/GetAllUser',
+            user__pb2.Empty.SerializeToString,
             user__pb2.UserBody.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
